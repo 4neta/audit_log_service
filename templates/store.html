@@ -1,0 +1,22 @@
+<html>
+    <body>
+        <h1>Hi, what would you like to do?</h1>
+
+        <h3>Buy a book?</h3>
+		<ul>
+			{% for book in books %}
+			<li>{{book.author}} - <b>{{ book.title }}</b> - £{{ book.price }} </span></a></li>
+			{% endfor %}
+		</ul>
+
+        <h3>Change your password?</h3>
+        <div>
+            Old password: <input type="text" name="oldpass"> <br>
+            New password: <input type="text" name="changedpass"> <br>
+            <input type="submit" value="Change password"> <br>
+        </div>
+        <h3>Deactivate your account?</h3>
+        Type your password: <input type="text" name="changedpass"> <br>
+        <input type="submit" value="Deactivate"> <br>
+    </body>
+</html>
