@@ -91,32 +91,4 @@ def show_login_page():
 def show_books():
     return render_template("store.html", books=Book.query.all())
 
-"""
-import sqlite3
-conn = sqlite3.connect('data.db')
-cursor = conn.cursor()
-cursor.execute("DROP TABLE people")
-print("Table dropped... ")
-conn.commit()
-conn.close()
-"""
-#db.create_all()
-#Person.query.filter(Person.person_id > 0).delete()
-#db.session.add(Person(person_id=1, login='admin', name=None, surname=None, hashpass='-7873771072606562796', charged=None, phone=None, is_admin=True))
-#db.session.commit()
-
-# TODO: drop the table because it still remembers hashpass to be Integer, change to BigInteger maybe and test if it remembers the last 3 digits
-#Person.__tablename__.drop()
-#Book.query.filter(Book.book_id > 0).delete()
-#db.session.commit()
-"""
-db.create_all()
-db.session.add(Book(book_id=1, title="Introduction to Psychoanalysis", author="Sigmunt Freud", quantity=741, price=15))
-db.session.add(Book(book_id=2, title="Alice in Wonderland", author="Lewis Carroll", quantity=999, price=4))
-db.session.add(Book(book_id=3, title="1984", author="George Orwell", quantity=434, price=12))
-db.session.add(Book(book_id=4, title="Dictionary of Contemporary English", author="Longman", quantity=137, price=20))
-db.session.add(Book(book_id=5, title="Reality Transurfing", author="Zeland Vadim", quantity=10, price=8))
-db.session.commit()
-"""
-
 app.run(debug=True, host="127.0.0.1", port=3000)
