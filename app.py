@@ -1,20 +1,20 @@
 from enum import unique
 from multiprocessing import AuthenticationError
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import delete
 from datetime import datetime
+import sqlite3 as sql
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 
-
 class Book(db.Model):
     __tablename__ = 'books'
 
     # TODO: Adjust parameters of columns
-    book_id = db.Column(db.Integer, primary_key=True, unique=True)
+    book_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     title = db.Column(db.String(length=50))
     author = db.Column(db.String(length=30))
     quantity = db.Column(db.Integer)
@@ -33,7 +33,7 @@ class Book(db.Model):
 class Person(db.Model):
     __tablename__ = 'people'
 
-    person_id = db.Column(db.Integer, primary_key=True)
+    person_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(length=20))
     surname = db.Column(db.String(length=30))
     login = db.Column(db.String(length=30))
@@ -55,7 +55,7 @@ class Person(db.Model):
 class Order(db.Model):
     __tablename__ = 'orders'
 
-    order_id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     book_id = db.Column(db.Integer)
     person_id = db.Column(db.Integer)
     price = db.Column(db.Integer)
@@ -68,11 +68,10 @@ class Order(db.Model):
         self.price = price
         self.time = time
 
-
 class Audit(db.Model):
     __tablename__ = 'audit'
 
-    log_id = db.Column(db.Integer, primary_key=True)
+    log_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     person_id = db.Column(db.Integer)
     event = db.Column(db.String(length=50))
     time = db.Column(db.DateTime)
@@ -83,11 +82,36 @@ class Audit(db.Model):
         self.event = event
         self.time = time
 
-@app.route("/")
-def show_login_page():
-    return render_template("index.html", time=str(datetime.now()))
+with sql.connect("data.db") as con:
+    cur = con.cursor()
+#    cur.execute("INSERT INTO books (title, author, quantity, price) VALUES (?,?,?,?)",("","", , ) )
+    cur.execute("DELETE FROM people WHERE is_admin == 0")
+    con.commit()
 
-@app.route("/store/")
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/signin", methods = ['POST','GET'])
+def signin():
+    if request.method == 'POST':
+        name = request.form['name']
+        surname = request.form['surname']
+        newlogin = request.form['newlogin']
+        newpass = request.form['newpass']
+        phone = request.form['phone']
+        try:
+            with sql.connect("data.db") as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO people (name, surname, login, hashpass, charged, phone, is_admin) VALUES (?,?,?,?,?,?,?)",(name,surname,newlogin,hash(newpass),0,phone,False) )
+                con.commit()
+        except:
+            con.rollback()
+            return render_template("index.html", msg="Please try again")
+        con.close()
+        return render_template("store.html")
+
+@app.route("/store")
 def show_books():
     return render_template("store.html", books=Book.query.all())
 
