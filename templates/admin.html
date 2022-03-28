@@ -1,0 +1,64 @@
+<html>
+    <body>
+        <h1>The admin panel</h1>
+
+        <form action = "/updatequantity" method = "POST">
+        <h3>Update the quantity:</h3>
+        {{ msg }} <br>
+        <ul>
+            {% for book in books %}
+            <li>{{ book.book_id }}. {{ book.author }} - <b>{{ book.title }}</b> - {{ book.quantity }} </a></li>
+            {% endfor %}
+        </ul>
+        <div>
+            Book's number: <input type="text" name="book_id"> <br>
+            Added: <input type="text" name="add"> <br>
+            <input type="submit" value="Submit"> <br>
+        </div>
+        </form>
+
+        <h3>Check below who has to pay:</h3>
+        <div>
+            <ul>
+                {% for person in people %}
+                {% if person.charged %}
+                <li>{{ person.name }} {{ person.surname }} - <b>{{ person.charged }}</b> - {{ person.phone }} </a></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- TODO -->
+        <form action = "/deleteperson" method = "POST">
+        <h3>Delete customer's account:</h3>
+        <div>
+            Login: <input type="text" name="deleteperson"> <br>
+            <input type="submit" value="Delete">
+        </div>
+        </form>
+
+        <!-- TODO -->
+        <form action = "/showlog" method = "POST">
+        <h3>Check logs:</h3>
+        <div>
+            Show only one user by id: <input type="text" name="id"> <input type="submit" value="Show results"> <br>
+            <div>
+                <ul>
+                    {% for person in people %}
+                    <li><b>{{ person.person_id }}.</b>  {{ person.name }} {{ person.surname }} - {{ person.charged }} - {{ person.phone }} </span></a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <br>
+            Show by activity (type the corresponding number): <input type="text" name="choice"> <input type="submit" value="Show results"> <br>
+            <ul>
+                <li><b>1.</b> Signing in</li>
+                <li><b>2.</b> Logging in</li>
+                <li><b>3.</b> Ordering books</li>
+                <li><b>4.</b> Deactivating an account</li>
+            </ul>
+        </div>
+        </form>
+    </body>
+</html>

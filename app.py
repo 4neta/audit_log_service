@@ -13,7 +13,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 class Book(db.Model):
     __tablename__ = 'books'
 
-    # TODO: Adjust parameters of columns
     book_id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     title = db.Column(db.String(length=50))
     author = db.Column(db.String(length=30))
@@ -82,15 +81,30 @@ class Audit(db.Model):
         self.event = event
         self.time = time
 
-with sql.connect("data.db") as con:
-    cur = con.cursor()
-#    cur.execute("INSERT INTO books (title, author, quantity, price) VALUES (?,?,?,?)",("","", , ) )
-    cur.execute("DELETE FROM people WHERE is_admin == 0")
-    con.commit()
+app = Flask(__name__)
+db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/login", methods = ['POST','GET'])
+def login():
+    if request.method == 'POST':
+        login = request.form['login']
+        password = request.form['password']
+        hashpass = password
+
+        with sql.connect("data.db") as con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM people WHERE login = ? AND hashpass = ?", (login, hashpass))
+            con.commit()
+            if not cur.fetchone():
+                return render_template("index.html", msg="Login failed")
+            else:
+                return render_template("store.html", username=login, books=Book.query.all(), people=Person.query.all())
+            con.close()
 
 @app.route("/signin", methods = ['POST','GET'])
 def signin():
@@ -100,19 +114,78 @@ def signin():
         newlogin = request.form['newlogin']
         newpass = request.form['newpass']
         phone = request.form['phone']
+        hashpass = newpass
+
         try:
             with sql.connect("data.db") as con:
                 cur = con.cursor()
-                cur.execute("INSERT INTO people (name, surname, login, hashpass, charged, phone, is_admin) VALUES (?,?,?,?,?,?,?)",(name,surname,newlogin,hash(newpass),0,phone,False) )
+                cur.execute("INSERT INTO people (name, surname, login, hashpass, charged, phone, is_admin) VALUES (?,?,?,?,?,?,?)",(name,surname,newlogin,hashpass,0,phone,False) )
                 con.commit()
+                return render_template("store.html", books=Book.query.all())
         except:
             con.rollback()
             return render_template("index.html", msg="Please try again")
         con.close()
-        return render_template("store.html")
 
-@app.route("/store")
-def show_books():
-    return render_template("store.html", books=Book.query.all())
+@app.route("/adminlog", methods = ['POST', 'GET'])
+def adminlog():
+    if request.method == 'POST':
+        adminlogin = request.form['adminlogin']
+        adminpass = request.form['adminpass']
+        adminhashpass = adminpass
+
+        try:
+            with sql.connect("data.db") as con:
+                cur = con.cursor()
+                cur.execute("SELECT * FROM people WHERE login = '" + adminlogin + "' AND hashpass = '" + adminhashpass + "' AND is_admin = 1")
+                con.commit()
+                if not cur.fetchone():
+                    return render_template("index.html", msg="Login failed")
+                else:
+                    return render_template("admin.html", adminlogin=adminlogin, books=Book.query.all(), people=Person.query.all())
+                con.close()
+        except:
+            con.rollback()
+            return render_template("index.html", msg="Please try again")
+
+@app.route("/buy", methods = ['POST', 'GET'])
+def buy():
+    pass
+
+@app.route("/updatequantity", methods = ['POST', 'GET'])
+def updatequantity():
+    if request.method == 'POST':
+        book_id = request.form['book_id']
+        add = request.form['add']
+        try:
+            with sql.connect("data.db") as con:
+                cur = con.cursor()
+                cur.execute("SELECT quantity FROM books WHERE book_id = ?", (book_id,))
+                con.commit()
+                quantity = cur.fetchall()[0][0]
+                newquantity = int(quantity) + int(add)
+
+                cur.execute("UPDATE books SET quantity = ? WHERE book_id = ?", (newquantity, book_id))
+                con.commit()
+
+                if not cur.fetchone():
+                    return render_template("admin.html", msg="Book not found", books=Book.query.all(), people=Person.query.all())
+                else:
+                    return render_template("admin.html", msg="The quantity for this book has been updated", books=Book.query.all(), people=Person.query.all())
+                con.close()
+        except:
+            con.rollback()
+            return render_template("admin.html", msg="Please try again", books=Book.query.all(), people=Person.query.all())
+
+@app.route("/deleteperson", methods = ['POST', 'GET'])
+def deleteperson():
+    pass
+
+@app.route("/showlog", methods = ['POST', 'GET'])
+def showlog():
+    pass
 
 app.run(debug=True, host="127.0.0.1", port=3000)
+
+# TODO's:
+# Could use the Flask-Login module instead of searching the database
