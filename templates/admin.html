@@ -1,10 +1,10 @@
 <html>
     <body>
         <h1>The admin panel</h1>
+        {{ msg }} <br>
 
         <form action = "/updatequantity" method = "POST">
         <h3>Update the quantity:</h3>
-        {{ msg }} <br>
         <ul>
             {% for book in books %}
             <li>{{ book.book_id }}. {{ book.author }} - <b>{{ book.title }}</b> - {{ book.quantity }} </a></li>
@@ -32,7 +32,7 @@
         <form action = "/deleteperson" method = "POST">
         <h3>Delete customer's account:</h3>
         <div>
-            Login: <input type="text" name="deleteperson"> <br>
+            ID: <input type="text" name="person_id"> <br>
             <input type="submit" value="Delete">
         </div>
         </form>
@@ -45,7 +45,7 @@
             <div>
                 <ul>
                     {% for person in people %}
-                    <li><b>{{ person.person_id }}.</b>  {{ person.name }} {{ person.surname }} - {{ person.charged }} - {{ person.phone }} </span></a></li>
+                    <li><b>{{ person.person_id }}.</b>  {{ person.name }} {{ person.surname }} - <b>£{{ person.charged }}</b> - {{ person.phone }} </span></a></li>
                     {% endfor %}
                 </ul>
             </div>
