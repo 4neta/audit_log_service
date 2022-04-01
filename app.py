@@ -219,4 +219,4 @@ def showlog():
         return render_template("admin.html", adminlogin=currentuser, msg=msg, books=Book.query.all(), people=Person.query.all(), logs=logs)
 
 
-app.run(debug=True, host="127.0.0.1", port=3000)
+app.run(debug=False, host="127.0.0.1", port=3000)
