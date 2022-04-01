@@ -6,7 +6,7 @@
 
         <b>{{msg}}</b>
         <br><br>
-        Please provide your credentials: <br>
+        <h3>Log in</h3>
         <div>
             Login: <input type="text" name="login"> <br>
             Password: <input type="text" name="password"> <br>
@@ -16,19 +16,20 @@
         <br>
 
         <form action = "/signin" method = "POST">
-        Or register:
+        <h3>Registration</h3>
         <div>
             Name: <input type="text" name="name"> <br>
             Surname: <input type="text" name="surname"> <br>
             Login: <input type="text" name="newlogin"> <br>
             Password: <input type="text" name="newpass"><br>
             Phone number: <input type="text" name="phone"> <br>
+            Address: <input type="text" name="address"><br>
             <input type="submit" value="Sign in"> <br>
         </div>
         </form>
 
         <form action = "/adminlog" method = "POST">
-        Admin login:
+        <h3>Admin log in</h3>
         <div>
             Login: <input type="text" name="adminlogin"> <br>
             Password: <input type="text" name ="adminpass"> <br>

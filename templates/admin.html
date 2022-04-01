@@ -22,13 +22,12 @@
             <ul>
                 {% for person in people %}
                 {% if person.charged %}
-                <li>{{ person.name }} {{ person.surname }} - <b>{{ person.charged }}</b> - {{ person.phone }} </a></li>
+                <li>{{ person.name }} {{ person.surname }} - <b>{{ person.charged }}</b> - {{ person.phone }}</li>
                 {% endif %}
                 {% endfor %}
             </ul>
         </div>
 
-        <!-- TODO -->
         <form action = "/deleteperson" method = "POST">
         <h3>Delete customer's account:</h3>
         <div>
@@ -37,10 +36,9 @@
         </div>
         </form>
 
-        <!-- TODO -->
-        <form action = "/showlog" method = "POST">
         <h3>Check logs:</h3>
         <div>
+            <form action = "/showlog" method = "POST">
             Show only one user by id: <input type="text" name="id"> <input type="submit" value="Show results"> <br>
             <div>
                 <ul>
@@ -55,10 +53,19 @@
             <ul>
                 <li><b>1.</b> Signing in</li>
                 <li><b>2.</b> Logging in</li>
-                <li><b>3.</b> Ordering books</li>
+                <li><b>3.</b> Ordering and updating books</li>
                 <li><b>4.</b> Deactivating an account</li>
+                <li><b>5.</b> Show all</li>
             </ul>
         </div>
-        </form>
+        
+        <div>
+            <ol>
+                {% for log in logs %}
+                <li>{{ log.person_id }} - <i>{{ log.event }}</i> &nbsp {{ log.time }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </form>
     </body>
 </html>
