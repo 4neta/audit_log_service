@@ -24,7 +24,7 @@ To simplify the solution, the visual aspect of the application has been omitted.
 
 Clone the repository in any chosen folder and run the following command in the terminal:<br>
 <code>cd audit_log_service && python3 app.py</code> <br>
-Hold the `Ctrl` key and right click on http://127.0.0.1:3000/ in the terminal (or just at this link).
+Hold the `Ctrl` key and right click on http://127.0.0.1:3000/ in the terminal (or just on this link).
 
 If you are new to the shop, you can simply sign in. 
 
