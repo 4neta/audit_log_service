@@ -104,7 +104,9 @@ You should see a list of events similar to:
 
 ### Signing in
 To test the signing functionality, type: <br>
-`curl -d 'name=name&surname=surname&newlogin=username&newpass=password&phone=777&address=world' http://127.0.0.1:3000/signin`
+```
+curl -d 'name=name&surname=surname&newlogin=username&newpass=password&phone=777&address=world' http://127.0.0.1:3000/signin
+```
 
 You should see the store page starting with:
 ```
