@@ -142,12 +142,8 @@ def updatequantity():
                 cur.execute("UPDATE books SET quantity = ? WHERE book_id = ?", (newquantity, book_id))
                 con.commit()
 
-                if not cur.fetchone():
-                    log("Book searching attempt")
-                    return render_template("admin.html", msg="Book not found", books=Book.query.all(), people=Person.query.all())
-                else:
-                    log("Update of a book's quantity")
-                    return render_template("admin.html", msg="The quantity for this book has been updated", books=Book.query.all(), people=Person.query.all())
+                log("Update of a book's quantity")
+                return render_template("admin.html", msg="The quantity for this book has been updated", books=Book.query.all(), people=Person.query.all())
         except:
             log("Update of a book's quantity failure")
             con.rollback()
